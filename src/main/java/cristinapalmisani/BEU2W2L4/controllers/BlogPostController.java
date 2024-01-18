@@ -39,8 +39,8 @@ public class BlogPostController {
     @ResponseStatus(HttpStatus.CREATED)
     public BlogResponseDTO saveBlog(@RequestBody @Validated BlogPostDTO body, BindingResult validation) {
         if (validation.hasErrors()){
-            System.out.println(validation.getAllErrors());
-            throw new BadRequestException("Ci sono errori nel payload!");
+
+            throw new BadRequestException(validation.getAllErrors().toString());
         } else {
             BlogPost newBlog = blogPostService.save(body);
             return new BlogResponseDTO(newBlog.getId());

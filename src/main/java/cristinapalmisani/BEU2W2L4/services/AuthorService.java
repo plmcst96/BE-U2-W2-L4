@@ -2,6 +2,7 @@ package cristinapalmisani.BEU2W2L4.services;
 
 import cristinapalmisani.BEU2W2L4.entities.Author;
 import cristinapalmisani.BEU2W2L4.exception.NotFoundException;
+import cristinapalmisani.BEU2W2L4.payloads.author.AuthorDTO;
 import cristinapalmisani.BEU2W2L4.repositories.AuthorDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,9 +25,14 @@ public class AuthorService {
         return authorDao.findAll(pageable);
     }
 
-    public Author save(Author body) {
-        body.setAvatar("https://ui-avatars.com/api/?name=" + body.getName() + "+" + body.getSurname());
-        return authorDao.save(body);
+    public Author save(AuthorDTO body) {
+        Author newAuthor = new Author();
+        newAuthor.setAvatar("https://ui-avatars.com/api/?name=" + body.name() + "+" + body.surname());;
+        newAuthor.setName(body.name());
+        newAuthor.setSurname(body.surname());
+        newAuthor.setEmail(body.email());
+        newAuthor.setBirthDate(body.birthDate());
+        return authorDao.save(newAuthor);
     }
 
     public Author findById(UUID id) {

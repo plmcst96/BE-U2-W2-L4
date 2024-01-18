@@ -1,10 +1,14 @@
 package cristinapalmisani.BEU2W2L4.controllers;
 
 import cristinapalmisani.BEU2W2L4.entities.Author;
+import cristinapalmisani.BEU2W2L4.exception.BadRequestException;
+import cristinapalmisani.BEU2W2L4.payloads.author.AuthorDTO;
 import cristinapalmisani.BEU2W2L4.services.AuthorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,8 +37,14 @@ public class AuthorController {
     // POST nuovo autore
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Author saveBlog(@RequestBody Author body) {
-        return authorService.save(body);
+    public Author saveBlog(@RequestBody @Validated AuthorDTO body, BindingResult validation) {
+        if (validation.hasErrors()){
+            System.out.println(validation.getAllErrors());
+            throw new BadRequestException("Ci sono problemi nel caricamento del payload");
+        } else {
+            return authorService.save(body);
+        }
+
     }
 
     //PUT modifica il autore
