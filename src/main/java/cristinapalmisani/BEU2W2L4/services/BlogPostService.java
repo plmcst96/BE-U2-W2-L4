@@ -3,7 +3,7 @@ package cristinapalmisani.BEU2W2L4.services;
 import cristinapalmisani.BEU2W2L4.entities.Author;
 import cristinapalmisani.BEU2W2L4.entities.BlogPost;
 import cristinapalmisani.BEU2W2L4.exception.NotFoundException;
-import cristinapalmisani.BEU2W2L4.payloads.BlogPostDTO;
+import cristinapalmisani.BEU2W2L4.payloads.blog.BlogPostDTO;
 import cristinapalmisani.BEU2W2L4.repositories.BlogPostDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,13 +28,13 @@ public class BlogPostService {
     }
 
     public BlogPost save(BlogPostDTO body) {
-        Author author = authorService.findById(body.getAuthorId());
+        Author author = authorService.findById(body.authorId());
        BlogPost post = new BlogPost();
-        post.setTitle(body.getTitle());
-        post.setCategory(body.getCategory());
-        post.setContent(body.getContent());
-        post.setReadingTime(body.getReadingTime());
-        post.setCover(body.getCover());
+        post.setTitle(body.title());
+        post.setCategory(body.category());
+        post.setContent(body.content());
+        post.setReadingTime(body.readingTime());
+        post.setCover("https://picsium.photos/200/300");
         post.setAuthor(author);
         return blogPostDao.save(post);
     }

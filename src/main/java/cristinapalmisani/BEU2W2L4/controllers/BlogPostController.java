@@ -1,14 +1,17 @@
 package cristinapalmisani.BEU2W2L4.controllers;
 
 import cristinapalmisani.BEU2W2L4.entities.BlogPost;
-import cristinapalmisani.BEU2W2L4.payloads.BlogPostDTO;
+import cristinapalmisani.BEU2W2L4.exception.BadRequestException;
+import cristinapalmisani.BEU2W2L4.payloads.blog.BlogPostDTO;
+import cristinapalmisani.BEU2W2L4.payloads.blog.BlogResponseDTO;
 import cristinapalmisani.BEU2W2L4.services.BlogPostService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -34,8 +37,15 @@ public class BlogPostController {
     // POST nuovo blog
     @PostMapping("/{id}")
     @ResponseStatus(HttpStatus.CREATED)
-    public BlogPost saveBlog(@RequestBody BlogPostDTO body) {
-        return blogPostService.save(body);
+    public BlogResponseDTO saveBlog(@RequestBody @Validated BlogPostDTO body, BindingResult validation) {
+        if (validation.hasErrors()){
+            System.out.println(validation.getAllErrors());
+            throw new BadRequestException("Ci sono errori nel payload!");
+        } else {
+            BlogPost newBlog = blogPostService.save(body);
+            return new BlogResponseDTO(newBlog.getId());
+        }
+
     }
 
     //PUT modifica il blogPost
